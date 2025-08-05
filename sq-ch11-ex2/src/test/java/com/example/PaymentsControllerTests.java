@@ -26,36 +26,36 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 @AutoConfigureMockMvc
 class PaymentsControllerTests {
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  private static WireMockServer wireMockServer;
+    private static WireMockServer wireMockServer;
 
-  @BeforeAll
-  static void init() {
-    wireMockServer = new WireMockServer(new WireMockConfiguration().port(8080));
-    wireMockServer.start();
-    WireMock.configureFor("localhost", 8080);
-  }
+    @BeforeAll
+    static void init() {
+        wireMockServer = new WireMockServer(new WireMockConfiguration().port(8080));
+        wireMockServer.start();
+        WireMock.configureFor("localhost", 8080);
+    }
 
-  @Test
-  void testPaymentEndpoint() throws Exception {
-    Payment request = new Payment();
-    request.setAmount(1000);
+    @Test
+    void testPaymentEndpoint() throws Exception {
+        Payment request = new Payment();
+        request.setAmount(1000);
 
-    ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
-    stubFor(WireMock.post(urlMatching("/payment"))
-        .willReturn(aResponse()
-            .withBody(mapper.writeValueAsString(request))
-            .withHeader("content-type", MediaType.APPLICATION_JSON_VALUE)
-            .withStatus(OK.value())));
+        stubFor(WireMock.post(urlMatching("/payment"))
+                .willReturn(aResponse()
+                        .withBody(mapper.writeValueAsString(request))
+                        .withHeader("content-type", MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(OK.value())));
 
-    mockMvc.perform(post("/payment")
-            .content(mapper.writeValueAsString(request))
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.amount").value(1000));
-  }
+        mockMvc.perform(post("/payment")
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.amount").value(1000));
+    }
 
 }

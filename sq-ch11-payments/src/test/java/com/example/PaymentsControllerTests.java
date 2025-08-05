@@ -17,22 +17,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class PaymentsControllerTests {
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Test
-  void testPaymentEndpoint() throws Exception {
-    Payment requestBody = new Payment();
-    requestBody.setAmount(1000);
+    @Test
+    void testPaymentEndpoint() throws Exception {
+        Payment requestBody = new Payment();
+        requestBody.setAmount(1000);
 
-    ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
-    mockMvc.perform(post("/payment")
-            .header("requestId", "12345")
-            .content(mapper.writeValueAsString(requestBody))
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.amount").value(1000));
-  }
+        mockMvc.perform(post("/payment")
+                        .header("requestId", "12345")
+                        .content(mapper.writeValueAsString(requestBody))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.amount").value(1000));
+    }
 
 }

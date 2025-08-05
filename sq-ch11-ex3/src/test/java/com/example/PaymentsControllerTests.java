@@ -22,35 +22,35 @@ import static org.springframework.http.HttpStatus.OK;
 @AutoConfigureWebTestClient
 class PaymentsControllerTests {
 
-  @Autowired
-  private WebTestClient webTestClient;
+    @Autowired
+    private WebTestClient webTestClient;
 
-  private static WireMockServer wireMockServer;
+    private static WireMockServer wireMockServer;
 
-  @BeforeAll
-  static void init() {
-    wireMockServer = new WireMockServer(new WireMockConfiguration().port(8080));
-    wireMockServer.start();
-    WireMock.configureFor("localhost", 8080);
-  }
+    @BeforeAll
+    static void init() {
+        wireMockServer = new WireMockServer(new WireMockConfiguration().port(8080));
+        wireMockServer.start();
+        WireMock.configureFor("localhost", 8080);
+    }
 
-  @Test
-  void testPaymentEndpoint() throws Exception {
-    Payment requestBody = new Payment();
-    requestBody.setAmount(1000);
+    @Test
+    void testPaymentEndpoint() throws Exception {
+        Payment requestBody = new Payment();
+        requestBody.setAmount(1000);
 
-    ObjectMapper mapper = new ObjectMapper();
-    stubFor(WireMock.post(urlMatching("/payment"))
-        .willReturn(aResponse()
-            .withBody(mapper.writeValueAsString(requestBody))
-            .withHeader("content-type", MediaType.APPLICATION_JSON_VALUE)
-            .withStatus(OK.value())));
+        ObjectMapper mapper = new ObjectMapper();
+        stubFor(WireMock.post(urlMatching("/payment"))
+                .willReturn(aResponse()
+                        .withBody(mapper.writeValueAsString(requestBody))
+                        .withHeader("content-type", MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(OK.value())));
 
-    webTestClient.post()
-        .uri("/payment")
-        .bodyValue(requestBody)
-        .exchange()
-        .expectStatus().isOk();
-  }
+        webTestClient.post()
+                .uri("/payment")
+                .bodyValue(requestBody)
+                .exchange()
+                .expectStatus().isOk();
+    }
 
 }
